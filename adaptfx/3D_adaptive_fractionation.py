@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 27 20:33:59 2021
-
-@author: yoelh
-
-code without penalties per step
+This code calculates a 3D plan. This means, it tracks normal tissue BED and tumor BED. Therefore, it prevents overdosing in both tissues. the prescribed dose can be changed in value_eval, while the 
+maximum dose to the OAR is fixed at 90Gy BED so far.
 """
 
 
