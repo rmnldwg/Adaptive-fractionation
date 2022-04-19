@@ -1,4 +1,3 @@
-
 """
 This script opens a GUI to check the resulting inverse-gamma distribution. with the slide-bars one can directly adapt the distribution and check how the shape of the distribution changes
 """
@@ -10,8 +9,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-    
-    
 if __name__=='__main__':
 
     window = tk.Tk()
@@ -39,8 +36,6 @@ if __name__=='__main__':
         ax.plot(np.sqrt(x_range),invgamma.pdf(x_range, alpha, loc = 0,scale = beta ))
         canvas.draw()
 
-
-    
     var_alpha = tk.DoubleVar()
     scl_alpha = tk.Scale(frm_scale, label='alpha value', from_=0.001, to=1.00, orient=tk.HORIZONTAL, length=400, showvalue=1,tickinterval=0.999, resolution=0.001, variable = var_alpha, command = inv_gamma_plot)
     scl_alpha.grid(row = 0, column = 2)
@@ -48,8 +43,4 @@ if __name__=='__main__':
     scl_beta = tk.Scale(master = frm_scale, label = 'beta value', from_= 0.000001, to = 0.00100,variable = var_beta, orient = tk.HORIZONTAL, length = 400, tickinterval=0.000999, showvalue = 1, resolution = 0.000001,command = inv_gamma_plot)
     scl_beta.grid(row = 1, column = 2)
 
-    
-    
 window.mainloop()
-    
-    
