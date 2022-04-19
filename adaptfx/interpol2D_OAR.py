@@ -13,31 +13,29 @@ from scipy.stats import truncnorm
 from scipy.interpolate import interp1d
 
 
-
-
-
-def get_truncated_normal(mean=0, sd=1, low=0.01, upp=10):
+def get_truncated_normal(
+    mean: float = 0,
+    sd: float = 1,
+    low: float = 0.01,
+    upp: float = 10
+):
     """
-    produces a truncated normal distribution
+    Initialize truncated normal distribution.
 
     Parameters
     ----------
-    mean : float, optional
-        The default is 0.
-    sd : float, optional
-        The default is 1.
-    low : float, optional
-        The default is 0.01.
-    upp : float, optional
-        The default is 10.
+    mean : Mean of the normal distribution.
+    sd : Standard deviation.
+    low : Lower bound where the distribution should be truncated.
+    upp : Upper bound of the truncating.
 
     Returns
     -------
     scipy.stats._distn_infrastructure.rv_frozen
         distribution function.
-
     """
     return truncnorm((low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd)
+
 
 def probdist(X):
     """
@@ -52,7 +50,6 @@ def probdist(X):
     -------
     prob : list
         list with probabilities for each sparing factor.
-
     """
     prob = np.zeros(170)
     idx=0
@@ -60,6 +57,8 @@ def probdist(X):
         prob[idx] = X.cdf(i+0.004999999999999999999)-X.cdf(i-0.005)
         idx +=1
     return prob
+
+
 def std_calc(measured_data,alpha,beta):
     """
     calculates the most likely standard deviation for a list of k sparing factors and an inverse-gamma conjugate prior
@@ -78,7 +77,6 @@ def std_calc(measured_data,alpha,beta):
     -------
     std : float
         most likely std based on the measured data and inverse-gamma prior
-
     """
     n = len(measured_data)
     var_values = np.arange(0.00001,0.4,0.00001)
@@ -87,6 +85,8 @@ def std_calc(measured_data,alpha,beta):
         likelihood_values[index] = value**(-alpha-1)/value**(n/2)*np.exp(-beta/value)*np.exp(-np.var(measured_data)*n/(2*value))
     std = (np.sqrt(var_values[np.argmax(likelihood_values)]))
     return std
+
+
 def BED_calc0( dose, ab,sparing = 1):
     """
     calculates the BED for a specific dose
@@ -104,12 +104,12 @@ def BED_calc0( dose, ab,sparing = 1):
     -------
     BED : float
         BED to be delivered based on dose, sparing factor and alpha-beta ratio.
-
     """
     BED = sparing*dose*(1+(sparing*dose)/ab)
     return BED
 
-def BED_calc_matrix( sf, ab,actionspace):
+
+def BED_calc_matrix(sf, ab, actionspace):
     """
     calculates the BED for an array of values
 
@@ -126,10 +126,10 @@ def BED_calc_matrix( sf, ab,actionspace):
     -------
     BED : List/array
         list of all future BEDs based on the delivered doses and sparing factors.
-
     """
     BED = np.outer(sf,actionspace)*(1+np.outer(sf,actionspace)/ab) #produces a sparing factors x actions space array
     return BED
+
 
 def max_action(bed,actionspace,goal, abt=10):
     """
@@ -150,12 +150,13 @@ def max_action(bed,actionspace,goal, abt=10):
     -------
     sizer : integer
         gives the size of the resized actionspace to reach the prescribed tumor dose.
-
     """
     max_action = min(max(BED_calc0(actionspace,abt)),goal-bed)
     sizer = (np.argmin(np.abs(BED_calc0(actionspace,abt)-max_action)))
 
     return sizer
+
+
 def argfind(BEDT,value):
     """
     This function is used to find the index of certain values.
@@ -174,10 +175,10 @@ def argfind(BEDT,value):
     -------
     index : integer
         index of value inside list.
-
     """
     index = min(range(len(BEDT)), key=lambda i: abs(BEDT[i]-value))
     return  index
+
 
 def value_eval(fraction,number_of_fractions,accumulated_dose,sparing_factors,alpha,beta,goal,abt, abn,min_dose = 0, max_dose = 22.3,fixed_prob = 0, fixed_mean = 0, fixed_std = 0):
     """
@@ -218,7 +219,6 @@ def value_eval(fraction,number_of_fractions,accumulated_dose,sparing_factors,alp
     -------
     list
         Returns list with policies,relevant sparing factors range, physical dose to be delivered, tumor BED to be delivered, OAR BED to be delivered.
-
     """
     if fixed_prob != 1:
         mean = np.mean(sparing_factors) #extract the mean and std to setup the sparingfactor distribution
@@ -319,12 +319,14 @@ def value_eval(fraction,number_of_fractions,accumulated_dose,sparing_factors,alp
     OAR_dose = BED_calc0(physical_dose,abn,sparing_factors[-1])
     return [policy,sf,physical_dose,tumor_dose,OAR_dose]
 
+
 def whole_plan(number_of_fractions,sparing_factors,alpha,beta,goal,abt = 10, abn = 3,min_dose = 0, max_dose = 22.3,fixed_prob = 0, fixed_mean = 0, fixed_std = 0):
     """
     calculates all doses for a number_of_fractions fraction treatment (with 6 known sparing factors)
     sparing_factors: list or array of number_of_fractions + 1 sparing factors that have been observed.
     To used a fixed probability distribution, change fixed_prob to 1 and add a fixed mean and std.
     If a fixed probability distribution is chosen, alpha and beta are to be chosen arbitrarily as they will not be used
+
     Parameters
     ----------
     number_of_fractions : integer
@@ -351,10 +353,10 @@ def whole_plan(number_of_fractions,sparing_factors,alpha,beta,goal,abt = 10, abn
         mean of the fixed sparing factor normal distribution
     std_fixed: float
         standard deviation of the fixed sparing factor normal distribution
+
     Returns
     -------
     List with delivered tumor doses, delivered OAR doses and delivered physical doses
-
     """
     accumulated_tumor_dose = 0
     accumulated_OAR_dose = 0
@@ -370,13 +372,16 @@ def whole_plan(number_of_fractions,sparing_factors,alpha,beta,goal,abt = 10, abn
         physical_doses[looper] = physical_dose
     return [tumor_doses,OAR_doses,physical_doses]
 
+
 def whole_plan_print(number_of_fractions,sparing_factors,alpha,beta,goal,abt = 10, abn = 3,min_dose = 0, max_dose = 22.3,fixed_prob = 0, fixed_mean = 0, fixed_std = 0):
     """
     calculates all doses for a number_of_fractions fraction treatment (with 6 known sparing factors)
     sparing_factors: list or array of number_of_fractions + 1 sparing factors that have been observed.
     To used a fixed probability distribution, change fixed_prob to 1 and add a fixed mean and std.
     If a fixed probability distribution is chosen, alpha and beta are to be chosen arbitrarily as they will not be used
-    Parameters. This function prints the result and is optimal to be used when working with the script instead of the GUI
+    This function prints the result and is optimal to be used when working with the script instead of the GUI
+
+    Parameters
     ----------
     number_of_fractions : integer
         number of fractions that will be delivered.
@@ -402,10 +407,10 @@ def whole_plan_print(number_of_fractions,sparing_factors,alpha,beta,goal,abt = 1
         mean of the fixed sparing factor normal distribution
     std_fixed: float
         standard deviation of the fixed sparing factor normal distribution
+
     Returns
     -------
     None
-
     """
     [tumor_doses,OAR_doses,physical_doses] = whole_plan(number_of_fractions,sparing_factors,alpha,beta,goal,abt,abn,min_dose, max_dose, fixed_prob,fixed_mean,fixed_std)
     for i in range(len(physical_doses)):
@@ -415,12 +420,14 @@ def whole_plan_print(number_of_fractions,sparing_factors,alpha,beta,goal,abt = 1
     print('accumulated tumor dose: ', np.sum(tumor_doses))
     print('accumulated OAR dose: ', np.sum(OAR_doses))
 
+
 def single_fraction(number_of_fractions,sparing_factors,accumulated_tumor_dose,alpha,beta,goal,abt = 10, abn = 3,min_dose = 0, max_dose = 22.3,fixed_prob = 0, fixed_mean = 0, fixed_std = 0): #Vervollständigen
     """
     calculates the actual dose for a number_of_fractions fraction treatment
     sparing_factors: list or array with all sparing factors that have been observed.
     To used a fixed probability distribution, change fixed_prob to 1 and add a fixed mean and std.
     If a fixed probability distribution is chosen, alpha and beta are to be chosen arbitrarily as they will not be used
+
     Parameters
     ----------
     number_of_fractions : integer
@@ -449,10 +456,10 @@ def single_fraction(number_of_fractions,sparing_factors,accumulated_tumor_dose,a
         mean of the fixed sparing factor normal distribution
     std_fixed: float
         standard deviation of the fixed sparing factor normal distribution
+
     Returns
     -------
     None.
-
     """
     [policy,sf,physical_dose,tumor_dose,OAR_dose] = value_eval(len(sparing_factors)-1,number_of_fractions,accumulated_tumor_dose,sparing_factors,alpha,beta,goal,abt,abn,min_dose,max_dose,fixed_prob,fixed_mean,fixed_std)
     print('physical dose delivered in fraction ', len(sparing_factors)-1,': ', physical_dose)
