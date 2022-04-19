@@ -1,11 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-In this file are all functions to calculate the optimal dose for a single fraction, given that all previous sparing factors are known and prior date of patients from the same population is available.
-The value_eval function gives the optimal dose for a certain fraction. As input the sparing factors are needed and the alpha and beta hyperparameter of a inverse-gamma distribution to improve the probability distribution.
-if the alpha and beta value are not known, the data_fit function can be used which needs the sparing factors of prior patients as input.
-The optimal policies can be extracted from pol4 and pol manually (pol4 = first fraction, first index in pol is the last fraction and the last index is the first fraction). But one must know which sparing factor is on which index. To do so one must use the extracted sf from value_eval which tells us which sparing factors have been used on which index.
-it is recommended to usethe result_calc_BEDNT to calculate plans with different sparing factors.
-This program uses a discrete state space and does not interpolate between states. Therefore, it is less precise than the interpolation programs
+In this file are all functions to calculate the optimal dose for a single
+fraction, given that all previous sparing factors are known and prior date of
+patients from the same population is available. The value_eval function gives
+the optimal dose for a certain fraction. As input the sparing factors are
+needed and the alpha and beta hyperparameter of a inverse-gamma distribution to
+improve the probability distribution. If the alpha and beta value are not
+known, the data_fit function can be used which needs the sparing factors of
+prior patients as input. The optimal policies can be extracted from pol4 and
+pol manually (pol4 = first fraction, first index in pol is the last fraction
+and the last index is the first fraction). But one must know which sparing
+factor is on which index. To do so one must use the extracted sf from
+value_eval which tells us which sparing factors have been used on which index.
+It is recommended to usethe result_calc_BEDNT to calculate plans with different
+sparing factors. This program uses a discrete state space and does not
+interpolate between states. Therefore, it is less precise than the
+interpolation programs.
 """
 
 import numpy as np
