@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-2D interpolation. In this program the optimal fraction doses are compueted based on a maximal OAR dose while maximizing tumor BED.
-single_fraction allows to compute single fraction doses, while whole_plan computes the doses for a whole treatment plan (when all sparing factors are known).
-whole_plan_print prints the doses in a well-aranged manner.
+2D interpolation. In this program the optimal fraction doses are compueted
+based on a maximal OAR dose while maximizing tumor BED. `single_fraction`
+allows to compute single fraction doses, while whole_plan computes the doses
+for a whole treatment plan (when all sparing factors are known).
+`whole_plan_print` prints the doses in a well-aranged manner.
 """
-
 
 import numpy as np
 from scipy.stats import truncnorm

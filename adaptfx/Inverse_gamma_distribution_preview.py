@@ -1,5 +1,7 @@
 """
-This script opens a GUI to check the resulting inverse-gamma distribution. with the slide-bars one can directly adapt the distribution and check how the shape of the distribution changes
+This script opens a GUI to check the resulting inverse-gamma distribution. with
+the slide-bars one can directly adapt the distribution and check how the shape
+of the distribution changes.
 """
 
 from scipy.stats import invgamma

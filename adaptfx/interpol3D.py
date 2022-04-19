@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-whole plan 3D interpolation. This algorithm tracks tumor and OAR BED. If the prescribed tumor dose can be reached, the OAR dose is minimized. If the prescribed tumor dose can not be reached while staying below
-maximum BED, the tumor dose is maximized. The value_eval function calculates the optimal dose for one sparing factor given a sparing factor list and the alpha and beta hyperparameter of previous data (can be calculated with data_fit).
-the whole_plan function calculates the whole plan given all sparing factors and the hyperparameters.
-For extended functions inspect value_eval or whole_plan. Also read the extended function in the readme file.
-The value eval function is build by assigning a penalty depending on how much dose has been delivered to the OAR (in each fraction) and by how far we are from the prescribed dose after the last fractions.
-
+whole plan 3D interpolation. This algorithm tracks tumor and OAR BED. If the
+prescribed tumor dose can be reached, the OAR dose is minimized. If the
+prescribed tumor dose can not be reached while staying below maximum BED, the 
+tumor dose is maximized. The `value_eval` function calculates the optimal dose 
+for one sparing factor given a sparing factor list and the alpha and beta 
+hyperparameter of previous data (can be calculated with data_fit). The
+`whole_plan` function calculates the whole plan given all sparing factors and 
+the hyperparameters. For extended functions inspect `value_eval` or
+`whole_plan`. Also read the extended function in the readme file. The value 
+eval function is build by assigning a penalty depending on how much dose has
+been delivered to the OAR (in each fraction) and by how far we are from the
+prescribed dose after the last fractions.
 """
 
 import numpy as np
